@@ -33,18 +33,21 @@ ENV USERGROUP syncthing
 ENV APPUID 1000
 ENV APPGID 1000
 ENV USER_HOME /home/syncthing
-ENV BUILD_REQUIREMENTS curl
+ENV BUILD_REQUIREMENTS curl wget jq
 ENV REQUIREMENTS ca-certificates openssl supervisor
 ########################################
 
 ########################################
 #               Build                  #
 ########################################
-ARG RELAY_VERSION="v1.18.6"
-ARG DISCO_VERSION="v1.18.6"
-ARG RELAY_DOWNLOADURL="https://github.com/syncthing/relaysrv/releases/download/v1.18.6/strelaysrv-linux-amd64-v1.18.6.tar.gz"
-ARG DISCO_DOWNLOADURL="https://github.com/syncthing/discosrv/releases/download/v1.18.6/stdiscosrv-linux-amd64-v1.18.6.tar.gz"
-ARG BUILD_DATE="2022-10-28T14:09:07Z"
+ENV RELAY_BUILD_ID ""
+ENV DISCOVERY_BUILD_ID ""
+
+ENV ARCHITECTURE "linux-amd64"
+ENV RELAY_BUILD_TYPE "RelayServer_Build"
+ENV RELAY_BRANCH "release"
+ENV DISCOVERY_BUILD_TYPE "DiscoveryServer_Build"
+ENV DISCOVERY_BRANCH "release"
 ########################################
 
 USER root
@@ -57,12 +60,12 @@ RUN apt-get update -qqy \
 
 # install server
 WORKDIR /tmp/
-RUN curl -Ls ${RELAY_DOWNLOADURL} --output relaysrv.tar.gz \
-		&& curl -Ls ${DISCO_DOWNLOADURL} --output discosrv.tar.gz \
-		&& tar -zxf relaysrv.tar.gz \
-		&& tar -zxf discosrv.tar.gz \
-		&& rm relaysrv.tar.gz \
-		&& rm discosrv.tar.gz \
+COPY download_releases.sh .
+RUN bash download_releases.sh \
+		&& tar -zxf relaysrv_*.tar.gz \
+		&& tar -zxf discosrv_*.tar.gz \
+		&& rm relaysrv_*.tar.gz \
+		&& rm discosrv_*.tar.gz \
 		&& mkdir -p ${USER_HOME}/server ${USER_HOME}/certs ${USER_HOME}/db \
 		&& cp /tmp/*relaysrv*/*relaysrv ${USER_HOME}/server/relaysrv \
 		&& cp /tmp/*discosrv*/*discosrv ${USER_HOME}/server/discosrv \
