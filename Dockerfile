@@ -45,9 +45,9 @@ ENV DISCOVERY_BUILD_ID ""
 
 ENV ARCHITECTURE "linux-amd64"
 ENV RELAY_BUILD_TYPE "RelayServer_Build"
-ENV RELAY_BRANCH "release"
+ENV RELAY_BRANCH "main"
 ENV DISCOVERY_BUILD_TYPE "DiscoveryServer_Build"
-ENV DISCOVERY_BRANCH "release"
+ENV DISCOVERY_BRANCH "main"
 ########################################
 
 USER root

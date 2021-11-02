@@ -9,5 +9,13 @@ Refer to the [upstream](https://github.com/t4skforce/syncthing-relay-discovery) 
 Check what's the [latest Syncthing release](https://github.com/syncthing/syncthing/releases/latest) in the official repo and tag the newly built image accordingly. Final releases may show up as RCs if they were promoted without additional changes - it's just a minor cosmetic inconvenience.
 
 ```bash
-docker build -t syncthing-relay-discovery:v1.18.1 .
+docker build --no-cache -t syncthing-relay-discovery:v1.18.1 .
+```
+
+### Testing the release download script
+
+Shorthand to load the Dockerfile's default env vars into your shell:
+
+```bash
+eval $(grep -E '^ENV ' Dockerfile | grep -v 'REQUIREMENTS' | sed 's/ \+/=/g' | sed 's/^ENV=/export /')
 ```
