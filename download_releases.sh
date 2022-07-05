@@ -23,5 +23,13 @@ else
     DISCOVERY_ARCHIVE_URL="$(fetchArtifactURL "${DISCOVERY_BUILD_TYPE}" "id:$DISCOVERY_BUILD_ID}" "${ARCHITECTURE}")"
 fi
 
+if [ "$1" == "--test" ]; then
+    echo "relaysrv_$(extractVersionFromURL "$RELAY_ARCHIVE_URL").tar.gz -> ${RELAY_ARCHIVE_URL}"
+    echo "discosrv_$(extractVersionFromURL "$DISCOVERY_ARCHIVE_URL").tar.gz -> ${DISCOVERY_ARCHIVE_URL}"
+    exit 0
+fi
+
+
 wget -O "relaysrv_$(extractVersionFromURL "$RELAY_ARCHIVE_URL").tar.gz" "${RELAY_ARCHIVE_URL}"
 wget -O "discosrv_$(extractVersionFromURL "$DISCOVERY_ARCHIVE_URL").tar.gz" "${DISCOVERY_ARCHIVE_URL}"
+ls -la relaysrv* discosrv*
