@@ -1,10 +1,12 @@
 #!/bin/bash
 
+fetchBuildDetails() {
+    curl -sS -H Accept:application/json "https://build.syncthing.net/guestAuth/app/rest/buildTypes/${1}/builds/${2}"
+}
+
 fetchArtifactURL() {
-    echo https://build.syncthing.net\
-$(curl -sS -H Accept:application/json "https://build.syncthing.net\
-$(curl -sS -H Accept:application/json "https://build.syncthing.net/guestAuth/app/rest/buildTypes/${1}/builds/${2}" | jq -M -r .artifacts.href)" \
-| jq -r '.file[] | select( .name | contains('\"${3}\"')) | .content.href')
+    echo "https://build.syncthing.net$(curl -sS -H Accept:application/json "https://build.syncthing.net$(fetchBuildDetails "$1" "$2" | jq -M -r .artifacts.href)" \
+    | jq -r '.file[] | select( .name | contains('\"${3}\"')) | .content.href')"
 }
 
 extractVersionFromURL() {
@@ -24,8 +26,8 @@ else
 fi
 
 if [ "$1" == "--test" ]; then
-    echo "relaysrv_$(extractVersionFromURL "$RELAY_ARCHIVE_URL").tar.gz -> ${RELAY_ARCHIVE_URL}"
-    echo "discosrv_$(extractVersionFromURL "$DISCOVERY_ARCHIVE_URL").tar.gz -> ${DISCOVERY_ARCHIVE_URL}"
+    echo "relaysrv_$(extractVersionFromURL "$RELAY_ARCHIVE_URL").tar.gz -> ($(fetchBuildDetails "${RELAY_BUILD_TYPE}" "branch:name:${RELAY_BRANCH}" | jq .number)) ${RELAY_ARCHIVE_URL}"
+    echo "discosrv_$(extractVersionFromURL "$DISCOVERY_ARCHIVE_URL").tar.gz -> ($(fetchBuildDetails "${DISCOVERY_BUILD_TYPE}" "branch:name:${DISCOVERY_BRANCH}" | jq .number)) ${DISCOVERY_ARCHIVE_URL}"
     exit 0
 fi
 
