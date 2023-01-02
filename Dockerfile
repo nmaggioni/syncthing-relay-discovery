@@ -40,8 +40,7 @@ ENV REQUIREMENTS ca-certificates openssl supervisor
 ########################################
 #               Build                  #
 ########################################
-ENV RELAY_BUILD_ID ""
-ENV DISCOVERY_BUILD_ID ""
+ARG RELEASE_TAG=""
 
 ENV ARCHITECTURE "linux-amd64"
 ENV RELAY_BUILD_TYPE "RelayServer_Build"
